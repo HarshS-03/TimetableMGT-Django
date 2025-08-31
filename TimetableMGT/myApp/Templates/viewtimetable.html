@@ -1,0 +1,169 @@
+{% extends 'index.html' %}
+{% block title %}<title>View timeable</title>{% endblock title %}
+
+{% block content %}
+<!-- Filters -->
+<form method="get" style="margin: 20px 0; display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+    <div>
+        <label for="faculty">Faculty:</label>
+        <input list="faculty-list" id="faculty" name="faculty" value="{{ faculty_filter }}">
+        <datalist id="faculty-list">
+            <option value="Dr. Suchit Purohit">
+            <option value="Ms. Anju Jha">
+            <option value="Mr. Vishal Prajapati">
+            <option value="Dr. Jigna Satani">
+        </datalist>
+    </div>
+
+    <div>
+        <label for="subject">Subject:</label>
+        <input list="subject-list" id="subject" name="subject" value="{{ subject_filter }}">
+        <datalist id="subject-list">
+            <option value="Python (GPU)">
+            <option value="Python">
+            <option value="Artificial Intelligence">
+            <option value="Mathematical Foundation">
+            <option value="OOCP">
+            <option value="Linear Algebra & Numerical Methods">
+        </datalist>
+    </div>
+
+    <div>
+        <label for="course">Course:</label>
+        <input list="course-list" id="course" name="course" value="{{ course_filter }}">
+        <datalist id="course-list">
+            <option value="M.Sc. AI&ML">
+            <option value="M.Sc. Computer Science">
+            <option value="MCA">
+        </datalist>
+    </div>
+
+    <div>
+        <label for="year">Year:</label>
+        <input list="year-list" id="year" name="year" value="{{ year_filter }}">
+        <datalist id="year-list">
+            {% for year in year_options %}
+                <option value="{{ year }}">
+            {% endfor %}
+        </datalist>
+    </div>
+
+    <div>
+        <button type="submit">Filter</button>
+    </div>
+</form>
+
+<style>
+/* Dropdown and input styles */
+input[list] {
+    padding: 10px 12px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    min-width: 200px;
+    transition: all 0.3s ease;
+    background-color: #f9fafb;
+}
+
+input[list]:focus {
+    border-color: #1b3460;
+    box-shadow: 0 0 8px rgba(27, 52, 96, 0.3);
+    outline: none;
+    background-color: #ffffff;
+}
+
+/* Button styling */
+button[type="submit"] {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(90deg, #1b3460 0%, #3a5a99 100%);
+    border: 2px solid #0f2340;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(90deg, #0f2340 0%, #1b3460 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+thead {
+    background: #1b3460;
+    color: #fff;
+}
+
+thead th {
+    padding: 12px;
+    border: 2px solid #0f2340; /* darker border for header */
+}
+
+tbody td {
+    padding: 10px;
+    border: 1px solid #4a5a78; /* slightly darker border for body */
+    vertical-align: middle;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #cfe2f3; /* light blue */
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #fef3c7; /* light yellow */
+}
+
+tbody tr:hover {
+    background-color: #ffeaa7; /* highlight on hover */
+}
+</style>
+
+<!-- Timetable Table -->
+<table>
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Faculty</th>
+            <th>Room</th>
+            <th>Course</th>
+            <th>Year</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% regroup timetable by day as day_list %}
+    {% for day_group in day_list %}
+        {% for entry in day_group.list %}
+        <tr>
+            {% if forloop.first %}
+            <td rowspan="{{ day_group.list|length }}" style="font-weight:bold;">{{ day_group.grouper }}</td>
+            {% endif %}
+            <td>{{ entry.time }}</td>
+            <td>{{ entry.subject }}</td>
+            <td>{{ entry.teacher }}</td>
+            <td>{{ entry.room }}</td>
+            <td>{{ entry.course }}</td>
+            <td>{{ entry.year }}</td>
+        </tr>
+        {% endfor %}
+    {% empty %}
+        <tr>
+            <td colspan="7">No timetable data available.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
