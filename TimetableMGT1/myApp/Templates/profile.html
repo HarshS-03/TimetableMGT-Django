@@ -1,0 +1,90 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<style>
+  /* Button style with simple hover */
+  .profile-button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    border: none;
+    background: var(--primary-color);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+
+  .profile-button:hover {
+    background: #1b3566; /* Slightly darker */
+    transform: scale(1.03);
+  }
+
+  .profile-input {
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    border: none;
+    background: var(--bg-color);
+    box-shadow: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+    transition: all 0.2s ease-in-out;
+    max-width: 300px;
+    text-align: center;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: center;
+  }
+
+  .profile-info {
+    padding: 1rem;
+    border-radius: 20px;
+    background: var(--bg-color);
+    box-shadow: 7px 7px 15px var(--dark-shadow), -7px -7px 15px var(--light-shadow);
+    width: 100%;
+  }
+</style>
+
+<div class="content-wrapper" style="display: flex; flex-direction: column; align-items: center; padding: 2rem; gap: 1.5rem; max-width: 450px; text-align: center;">
+
+    <h2 style="color: var(--text-color); font-weight: 700;">Profile</h2>
+
+    <div class="profile-info">
+        <p style="color: var(--text-color);"><strong>Name:</strong> {{ faculty.name }}</p>
+        <p style="color: var(--text-color);"><strong>Subject:</strong> {{ faculty.subject }}</p>
+    </div>
+
+    <h3 style="color: var(--text-color); font-weight: 600; margin-top: 1rem;">Change Password</h3>
+    
+    {% if error %}
+        <p style="color:red; font-weight: 600;">{{ error }}</p>
+    {% endif %}
+    {% if success %}
+        <p style="color:green; font-weight: 600;">{{ success }}</p>
+    {% endif %}
+
+    <form method="post" action="{% url 'profile' %}" style="display: flex; flex-direction: column; gap: 1rem; width: 100%; align-items: center;">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="old_password" style="color: var(--text-color); font-weight: 600;">Current Password</label>
+            <input type="password" id="old_password" name="old_password" required placeholder="Enter current password" class="profile-input">
+        </div>
+        <div class="form-group">
+            <label for="new_password" style="color: var(--text-color); font-weight: 600;">New Password</label>
+            <input type="password" id="new_password" name="new_password" required placeholder="Enter new password" class="profile-input">
+        </div>
+        <div class="form-group">
+            <label for="confirm_password" style="color: var(--text-color); font-weight: 600;">Confirm New Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm new password" class="profile-input">
+        </div>
+
+        <button type="submit" class="profile-button">Update Password</button>
+    </form>
+
+</div>
+{% endblock %}
